@@ -1,17 +1,17 @@
+import pickle
 from pathlib import Path
-from pandas import DataFrame
+
+import matplotlib.pyplot as pp
+import shap
 import streamlit as st
 import streamlit.components.v1 as components
-import pickle
-import shap
-import matplotlib.pyplot as pp
-
+from pandas import DataFrame
 
 st.title("What's this Penguin?")
 st.subheader("Real Time Prediction API & Explainer")
 #st.sidebar.header("User Features Input")
 
-PROJECT_PATH = Path.cwd()
+PROJECT_PATH = Path.cwd().parent.parent
 MODEL_PATH = PROJECT_PATH / 'model_assets'
 ASSETS_PATH = PROJECT_PATH / 'assets'
 
@@ -47,13 +47,37 @@ def explain_model_prediction():
     #shap_values = explainer.shap_values(data)
     return shap.plots.force(
         explainer(input_df)[:, :, prediction], matplotlib=False)
+def draw_hist_pic(feature):
+    pic_path = ASSETS_PATH / f'hist_{feature}.png'
+    st.image(pic_path.as_posix(), caption='')
 
 model, label_decoder, explainer = load_model_assets()
 
 shap.initjs()
 poster_path = (ASSETS_PATH / 'penguins.png').as_posix()
-st.image(poster_path)
+st.image(poster_path, width=200, caption="Adelie? Chinstrap? Gentoo?")
+columns = st.columns(3)
+
+features = [
+        'bill_depth_mm', 'flipper_length_mm', 'bill_length_mm']
+for feat, col in zip(features, columns):
+    with col:
+        draw_hist_pic(feat)
+
+    #with columns[1]:
+    #    pic_path = ASSETS_PATH / 'hist_flipper_length_mm.png'
+    #    st.image(pic_path.as_posix(), caption='')
+
+    #with columns[2]:
+    #    pic_path = ASSETS_PATH / 'hist_bill_length_mm.png'
+#    st.image(pic_path.as_posix(), caption='')
+
 col1, col2 = st.columns(2)
+#with col1:
+#    features = [
+##        'bill_depth_mm', 'flipper_length_mm', 'bill_length_mm']
+#    for feat in features:
+#       draw_hist_pic(feat2
 with col1:
     st.text(" ")
     st.text(" ")
@@ -66,11 +90,10 @@ predicted_image_path = (ASSETS_PATH / f'{prediction_species}.jpg').as_posix()
 with col2:
     st.subheader(
         'Predicted Species:')
-    st.image(predicted_image_path, width=300)
-    st.subheader(f'{prediction_species} ({100*max_proba:.1f}%)')
+    st.image(predicted_image_path, width=250, 
+             caption=f'{prediction_species} ({100*max_proba:.1f}%)')
+    #st.subheader(f'{prediction_species} ({100*max_proba:.1f}%)')
+
+
 
 st_shap(explain_model_prediction())
-#p = shap.plots.force(
-#    explainer(input_df)[:, :, prediction], 
-#    matplotlib=True, figsize=(20, 6), show=True)
-#st.write(p)

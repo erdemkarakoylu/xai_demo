@@ -14,7 +14,7 @@ def color_normalization(data, center_at=0):
     return normalize
 
 def compute_permutation_importances(estimator, X, y, random_state=42, n_repeats=10):
-    perm = permuatation_importance(
+    perm = permutation_importance(
         estimator=estimator, X=X, y=y, raandom_state=random_state, n_repeats=n_repeats)
     return perm
 
@@ -40,7 +40,7 @@ def plot_prem_import(X, y, model, feature_names, n_features=15, perm_object=None
     ax=axs[0],
     )
     axs[0].axvline(x=0, color='r', lw=2, ls='--')
-    axs[1].boxplot(, vert=False);
+    axs[1].boxplot(X, vert=False);
     axs[1].set_yticklabels([])
     axs[1].axvline(x=0, color='r', lw=2, ls='--')
     f.tight_layout()
