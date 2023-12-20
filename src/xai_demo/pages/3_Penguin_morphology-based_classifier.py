@@ -47,6 +47,7 @@ def explain_model_prediction():
     #shap_values = explainer.shap_values(data)
     return shap.plots.force(
         explainer(input_df)[:, :, prediction], matplotlib=False)
+
 def draw_hist_pic(feature):
     pic_path = ASSETS_PATH / f'hist_{feature}.png'
     st.image(pic_path.as_posix(), caption='')
@@ -64,20 +65,8 @@ for feat, col in zip(features, columns):
     with col:
         draw_hist_pic(feat)
 
-    #with columns[1]:
-    #    pic_path = ASSETS_PATH / 'hist_flipper_length_mm.png'
-    #    st.image(pic_path.as_posix(), caption='')
-
-    #with columns[2]:
-    #    pic_path = ASSETS_PATH / 'hist_bill_length_mm.png'
-#    st.image(pic_path.as_posix(), caption='')
-
 col1, col2 = st.columns(2)
-#with col1:
-#    features = [
-##        'bill_depth_mm', 'flipper_length_mm', 'bill_length_mm']
-#    for feat in features:
-#       draw_hist_pic(feat2
+
 with col1:
     st.text(" ")
     st.text(" ")
@@ -92,8 +81,5 @@ with col2:
         'Predicted Species:')
     st.image(predicted_image_path, width=250, 
              caption=f'{prediction_species} ({100*max_proba:.1f}%)')
-    #st.subheader(f'{prediction_species} ({100*max_proba:.1f}%)')
-
-
 
 st_shap(explain_model_prediction())
